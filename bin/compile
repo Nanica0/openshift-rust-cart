@@ -13,7 +13,7 @@ build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
 ver=${RUSTVERSION:-"1.1.0"}
 buildpack=$(dirname $(dirname $0))
-rustup=https://static.rust-lang.org/rustup.sh
+rustup=https://sh.rustup.rs
 rust_cache=$cache/rust-$ver
 
 # Python
@@ -41,11 +41,14 @@ then
     echo "-----> Using Rust $ver"
 else
     mkdir -p $rust_cache
+    cd $rust_cache
     echo    "       First download, may take several minutes"
     echo -n "-----> Installing Rust $ver..."
-    curl -sOf $rustup
-    HOME=$cache bash rustup.sh --prefix=$rust_cache --channel=beta --yes --disable-sudo
-    rm rustup.sh
+    wget $rustup
+    mv index.html rustup.sh
+    chmod 731 rustup.sh
+    HOME=$rust_cache bash rustup.sh -y --default-toolchain nightly
+    rm rustup.sh 
     ln -sf $rust_cache $OPENSHIFT_RUST_DIR/current
     echo " done"
 fi
@@ -56,10 +59,13 @@ export RUSTROOT
 CARGO_HOME=$RUSTROOT/.cargo
 export CARGO_HOME
 
+RUSTUP_HOME=$RUSTROOT/.rustup
+export RUSTUP_HOME
+
 RUSTPATH=$build/.openshift/r
 export RUSTPATH
 
-export PATH=$PATH:$RUSTROOT/bin
+export PATH=$PATH:$RUSTROOT
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUSTROOT/lib
 
 echo "-----> Running: cargo build"
@@ -75,3 +81,4 @@ echo "$LD_LIBRARY_PATH:$RUSTROOT/lib" > $OPENSHIFT_RUST_DIR/env/OPENSHIFT_RUST_L
 echo $OPENSHIFT_RUST_IP > $OPENSHIFT_RUST_DIR/env/HOST
 echo $OPENSHIFT_RUST_PORT > $OPENSHIFT_RUST_DIR/env/PORT
 echo $CARGO_HOME > $OPENSHIFT_RUST_DIR/env/CARGO_HOME
+echo $RUSTUP_HOME > $OPENSHIFT_RUST_DIR/env/RUSTUP_HOME

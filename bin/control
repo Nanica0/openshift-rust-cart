@@ -11,7 +11,10 @@ export RUSTROOT
 CARGO_HOME=$RUSTROOT/.cargo
 export CARGO_HOME
 
-export PATH=$PATH:$RUSTROOT/bin
+RUSTUP_HOME=$RUSTROOT/.rustup
+export RUSTUP_HOME
+
+export PATH=$PATH:$RUSTROOT/bin:$CARGO_HOME/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUSTROOT/lib
 
 function is_rust_service_running() {
@@ -52,7 +55,7 @@ function start() {
 
 	    echo $PATH >> $logf
 	    echo $LD_LIBRARY_PATH >> $logf
-            nohup cargo run >> $logf 2>&1 &
+            nohup "target/release/$package" >> $logf 2>&1 &
 
             ret=$?
             npid=$!
@@ -77,7 +80,7 @@ function stop() {
         logf="${OPENSHIFT_RUST_LOG_DIR}/rust.log"
         echo "`date +"$FMT"`: Stopping application '$OPENSHIFT_APP_NAME' ..." >> $logf
         /bin/kill $rust_pid
-	cargo run
+	
         ret=$?
         if [ $ret -ne 0 ]; then
             TIMEOUT="$STOPTIMEOUT"
