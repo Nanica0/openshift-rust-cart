@@ -59,6 +59,6 @@ Endpoints:
     Private-Port:      9000
     Public-Port-Name:  RUST_PROXY_PORT
     Mappings:
-      - Frontend:      '/rust'
-        Backend:       '/rust'
+      - Frontend:      "/rust"
+        Backend:       ""
 Install-Build-Required: true
