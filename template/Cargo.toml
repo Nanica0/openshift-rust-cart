@@ -1,8 +1,4 @@
 [package]
-name = "project"
+name = "hello_rocket"
 version = "0.1.0"
-authors = ["Flavio Percoco <flaper87@gmail.com>"]
-
-[dependencies.nickel]
-
-git = "https://github.com/nickel-org/nickel.rs.git"
+authors = ["Nanica0 <Nanica0@example.com>"]
