@@ -54,7 +54,7 @@ Endpoints:
       - Frontend:      "/health"
         Backend:       ""
         Options:       { health: true }
-  - Private-IP-Name:   RUST_IP
+  - Private-IP-Name:   IP
     Private-Port-Name: RUST_PORT
     Private-Port:      9000
     Public-Port-Name:  RUST_PROXY_PORT
